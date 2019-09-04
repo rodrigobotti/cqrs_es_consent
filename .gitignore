@@ -23,3 +23,4 @@ erl_crash.dump
 consent-*.tar
 
 .elixir_ls
+.vscode

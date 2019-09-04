@@ -7,57 +7,48 @@ defmodule Consent.Patient do
   alias Consent.Events.{ConsentAsked, ConsentGranted, ConsentRevoked}
   alias Consent.Commands.{AskConsent, GrantConsent, RevokeConsent}
 
-  defguardp has_key?(map, key) when :erlang.is_map_key(key, map)
-
-  defp add_timestamp(event) do
-    Map.put(event, :timestamp, Timex.now())
-  end
-
   # execute :: state -> command -> {:ok, [event]} | {:error, reason}
 
-  def execute(%{consent: consent}, %AskConsent{by_entity: entity, by_id: id})
-      when has_key?(consent, {entity, id}) do
-    {:error, :consent_already_granted}
+  def execute(%{} = patient, %AskConsent{} = cmd) do
+    if has_consent?(patient, {cmd.by_entity, cmd.by_id}, cmd.target) do
+      {:error, :consent_already_granted}
+    else
+      %ConsentAsked{
+        patient_id: cmd.patient_id,
+        by_id: cmd.by_id,
+        by_entity: cmd.by_entity,
+        target: cmd.target || :all
+      }
+      |> add_timestamp()
+    end
   end
 
-  def execute(_state, %AskConsent{} = cmd) do
-    %ConsentAsked{
-      patient_id: cmd.patient_id,
-      by_id: cmd.by_id,
-      by_entity: cmd.by_entity,
-      target: cmd.target || :all
-    }
-    |> add_timestamp()
+  def execute(%{} = patient, %GrantConsent{} = cmd) do
+    if has_consent?(patient, {cmd.to_entity, cmd.to_id}, cmd.target) do
+      {:error, :consent_already_granted}
+    else
+      %ConsentGranted{
+        patient_id: cmd.patient_id,
+        to_entity: cmd.to_entity,
+        to_id: cmd.to_id,
+        target: cmd.target || :all
+      }
+      |> add_timestamp()
+    end
   end
 
-  def execute(%{consent: consent}, %GrantConsent{to_entity: entity, to_id: id})
-      when has_key?(consent, {entity, id}) do
-    {:error, :consent_already_granted}
-  end
-
-  def execute(_state, %GrantConsent{} = cmd) do
-    %ConsentGranted{
-      patient_id: cmd.patient_id,
-      to_entity: cmd.to_entity,
-      to_id: cmd.to_id,
-      target: cmd.target || :all
-    }
-    |> add_timestamp()
-  end
-
-  def execute(%{consent: consent}, %RevokeConsent{from_entity: entity, from_id: id})
-      when not has_key?(consent, {entity, id}) do
-    {:error, :consent_not_granted}
-  end
-
-  def execute(_state, %RevokeConsent{} = cmd) do
-    %ConsentRevoked{
-      patient_id: cmd.patient_id,
-      from_entity: cmd.from_entity,
-      from_id: cmd.from_id,
-      target: cmd.target || :all
-    }
-    |> add_timestamp()
+  def execute(%{} = patient, %RevokeConsent{} = cmd) do
+    if has_consent?(patient, {cmd.from_entity, cmd.from_id}, cmd.target) do
+      %ConsentRevoked{
+        patient_id: cmd.patient_id,
+        from_entity: cmd.from_entity,
+        from_id: cmd.from_id,
+        target: cmd.target || :all
+      }
+      |> add_timestamp()
+    else
+      {:error, :consent_not_granted}
+    end
   end
 
   # apply :: state -> event -> state
@@ -67,21 +58,44 @@ defmodule Consent.Patient do
         to_id: id,
         target: target
       }) do
-    %Patient{
-      patient
-      | consent: Map.put(consent, {entity, id}, target)
-    }
+    consent
+    |> Map.get({entity, id}, [])
+    |> (&[target | &1]).()
+    |> update_consent({entity, id}, consent)
+    |> update_patient(patient)
   end
 
   def apply(%Patient{consent: consent} = patient, %ConsentRevoked{
         from_entity: entity,
-        from_id: id
+        from_id: id,
+        target: target
       }) do
-    %Patient{
-      patient
-      | consent: Map.delete(consent, {entity, id})
-    }
+    consent
+    |> Map.get({entity, id}, [])
+    |> List.delete(target)
+    |> update_consent({entity, id}, consent)
+    |> update_patient(patient)
   end
 
   def apply(state, _event), do: state
+
+  # private
+
+  def has_consent?(%{consent: consent}, {entity, id}, target) do
+    consent
+    |> Map.get({entity, id}, [])
+    |> Enum.member?(target)
+  end
+
+  defp add_timestamp(event) do
+    Map.put(event, :timestamp, Timex.now())
+  end
+
+  defp update_consent(target_list, key, %{} = consent_map) do
+    Map.put(consent_map, key, target_list)
+  end
+
+  defp update_patient(%{} = consent_map, %Patient{} = patient) do
+    %Patient{patient | consent: consent_map}
+  end
 end
