@@ -1,11 +1,12 @@
 defmodule Consent.Patient do
   use Timex
 
-  defstruct consent: %{}
-
   alias __MODULE__
   alias Consent.Events.{ConsentAsked, ConsentGranted, ConsentRevoked}
   alias Consent.Commands.{AskConsent, GrantConsent, RevokeConsent}
+
+  @derive Jason.Encoder
+  defstruct consent: %{}
 
   # execute :: state -> command -> {:ok, [event]} | {:error, reason}
 

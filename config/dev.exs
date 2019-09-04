@@ -1,5 +1,14 @@
 import Config
 
+config :consent, Consent.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "root",
+  password: "admin",
+  database: "cqrs_es_readstore",
+  hostname: "localhost",
+  port: 5433,
+  pool_size: 10
+
 config :commanded,
   event_store_adapter: Commanded.EventStore.Adapters.EventStore
 

@@ -1,5 +1,5 @@
 import Config
 
-IO.puts("environment: #{Mix.env()}")
+config :consent, ecto_repos: [Consent.Repo]
 
 import_config "#{Mix.env()}.exs"

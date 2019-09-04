@@ -19,7 +19,8 @@ defmodule Consent.MixProject do
       extra_applications: [
         :logger,
         :eventstore,
-        :timex
+        :timex,
+        :ecto_sql
       ]
     ]
   end
@@ -27,10 +28,13 @@ defmodule Consent.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:timex, "~> 3.5"},
       {:commanded, "~> 0.19"},
       {:jason, "~> 1.1"},
       {:commanded_eventstore_adapter, "~> 0.6"},
-      {:timex, "~> 3.5"}
+      {:commanded_ecto_projections, "~> 0.8"},
+      {:ecto, "~> 3.1"},
+      {:ecto_sql, "~> 3.1"}
     ]
   end
 
