@@ -7,10 +7,10 @@ defmodule Consent.Supervisor do
 
   def init(_arg) do
     children = [
-      {Consent.Repo, []}
-      # Projector
+      {Consent.Repo, []},
+      {Consent.Projectors.Patient, []}
     ]
+
     Supervisor.init(children, strategy: :one_for_one)
   end
-
 end
