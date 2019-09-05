@@ -51,7 +51,7 @@ defmodule Consent do
     |> Repo.all()
   end
 
-  def has_consent?(patient_id, entity_name, entity_id, permission \\ :all) do
+  def has_consent?(patient_id, entity_name, entity_id, permission \\ "all") do
     permissions =
       from(
         p in Patient,
@@ -66,7 +66,7 @@ defmodule Consent do
     case permissions do
       nil -> false
       [] -> false
-      list -> list |> has_any?([ to_string(permission), to_string(:all) ])
+      list -> list |> has_any?([ permission, "all" ])
     end
   end
 

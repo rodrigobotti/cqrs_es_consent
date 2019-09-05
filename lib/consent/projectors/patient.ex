@@ -17,7 +17,7 @@ defmodule Consent.Projectors.Patient do
     else
       Ecto.Multi.insert(multi, :create_patient_consent, %Schemas.Patient{
         patient_id: evt.patient_id,
-        entity_name: to_string(evt.by_entity),
+        entity_name: evt.by_entity,
         entity_id: evt.by_id,
         permissions: []
       })
@@ -33,14 +33,14 @@ defmodule Consent.Projectors.Patient do
       nil ->
         Ecto.Multi.insert(multi, :create_patient_consent, %Schemas.Patient{
           patient_id: evt.patient_id,
-          entity_name: to_string(evt.to_entity),
+          entity_name: evt.to_entity,
           entity_id: evt.to_id,
-          permissions: [to_string(evt.target)]
+          permissions: [evt.target]
         })
 
       saved ->
         changeset =
-          [to_string(evt.target) | saved.permissions]
+          [evt.target | saved.permissions]
           |> update_permissions_changeset(saved)
 
         Ecto.Multi.update(multi, :update_patient_consent, changeset)
@@ -58,7 +58,7 @@ defmodule Consent.Projectors.Patient do
 
       saved ->
         changeset =
-          List.delete(saved.permissions, to_string(evt.target))
+          List.delete(saved.permissions, evt.target)
           |> update_permissions_changeset(saved)
 
         Ecto.Multi.update(multi, :update_patient_consent, changeset)
@@ -76,7 +76,7 @@ defmodule Consent.Projectors.Patient do
       p in Schemas.Patient,
       where:
         p.patient_id == ^patient_id and
-          p.entity_name == ^to_string(entity_name) and
+          p.entity_name == ^entity_name and
           p.entity_id == ^entity_id
     )
   end

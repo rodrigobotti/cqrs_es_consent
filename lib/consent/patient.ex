@@ -18,7 +18,7 @@ defmodule Consent.Patient do
         patient_id: cmd.patient_id,
         by_id: cmd.by_id,
         by_entity: cmd.by_entity,
-        target: cmd.target || :all
+        target: cmd.target
       }
       |> add_timestamp()
     end
@@ -32,7 +32,7 @@ defmodule Consent.Patient do
         patient_id: cmd.patient_id,
         to_entity: cmd.to_entity,
         to_id: cmd.to_id,
-        target: cmd.target || :all
+        target: cmd.target
       }
       |> add_timestamp()
     end
@@ -44,7 +44,7 @@ defmodule Consent.Patient do
         patient_id: cmd.patient_id,
         from_entity: cmd.from_entity,
         from_id: cmd.from_id,
-        target: cmd.target || :all
+        target: cmd.target
       }
       |> add_timestamp()
     else
