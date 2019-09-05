@@ -18,7 +18,6 @@ defmodule Consent.MixProject do
       mod: {Consent.Application, []},
       extra_applications: [
         :logger,
-        :eventstore,
         :timex,
         :ecto_sql
       ]
@@ -31,7 +30,8 @@ defmodule Consent.MixProject do
       {:timex, "~> 3.5"},
       {:commanded, "~> 0.19"},
       {:jason, "~> 1.1"},
-      {:commanded_eventstore_adapter, "~> 0.6"},
+      {:eventstore, "~> 0.17", runtime: Mix.env() != :test},
+      {:commanded_eventstore_adapter, "~> 0.6", runtime: Mix.env() != :test},
       {:commanded_ecto_projections, "~> 0.8"},
       {:ecto, "~> 3.1"},
       {:ecto_sql, "~> 3.1"}
@@ -45,7 +45,7 @@ defmodule Consent.MixProject do
       setup_db: ["setup_es", "setup_ecto"],
       drop_db: ["ecto.drop", "event_store.drop"],
       reset_db: ["drop_db", "setup_db"],
-      test: ["reset_db", "test --trace"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
