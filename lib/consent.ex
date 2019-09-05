@@ -66,7 +66,12 @@ defmodule Consent do
     case permissions do
       nil -> false
       [] -> false
-      list -> to_string(permission) in list
+      list -> list |> has_any?([ to_string(permission), to_string(:all) ])
     end
   end
+
+  defp has_any?(list, values) do
+    list |> Enum.any?(&(&1 in values))
+  end
+
 end

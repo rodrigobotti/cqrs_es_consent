@@ -13,14 +13,14 @@ defmodule Consent.Projectors.Patient do
       |> Repo.exists?()
 
     if patient_exists? do
+      multi
+    else
       Ecto.Multi.insert(multi, :create_patient_consent, %Schemas.Patient{
         patient_id: evt.patient_id,
         entity_name: to_string(evt.by_entity),
         entity_id: evt.by_id,
         permissions: []
       })
-    else
-      multi
     end
   end)
 
