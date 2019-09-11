@@ -6,15 +6,11 @@ defmodule Consent.Middlewares.Validation do
 
   def before_dispatch(%Pipeline{command: command} = pipeline) do
     with {:ok, changeset} <- command_changeset(command) do
-      if changeset.valid? do
-        pipeline
-      else
-        pipeline
-        |> respond({:error, :validation_error, error_messages(changeset)})
-        |> halt
-      end
+      if changeset.valid?,
+        do: pipeline,
+        else: respond_error(pipeline, error_messages(changeset))
     else
-      _ -> pipeline
+      {:error, error} -> respond_error(pipeline, error)
     end
   end
 
@@ -28,6 +24,12 @@ defmodule Consent.Middlewares.Validation do
     else
       error -> {:error, error}
     end
+  end
+
+  defp respond_error(pipeline, error) do
+    pipeline
+    |> respond({:error, :validation_error, error})
+    |> halt
   end
 
   defp error_messages(changeset) do

@@ -3,6 +3,7 @@ defmodule Consent.CommandRouter do
 
   alias Consent.Commands.{AskConsent, GrantConsent, RevokeConsent}
 
+  middleware Commanded.Middleware.Logger
   middleware Consent.Middlewares.Validation
 
   dispatch(

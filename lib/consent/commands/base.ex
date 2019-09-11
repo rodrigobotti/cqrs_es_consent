@@ -13,6 +13,6 @@ defmodule Consent.Commands.Base do
     end
   end
 
-  @callback changeset(term()) :: Ecto.Changeset.t
+  @callback changeset(term()) :: Ecto.Changeset.t()
 
 end
