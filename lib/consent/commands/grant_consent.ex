@@ -1,5 +1,5 @@
 defmodule Consent.Commands.GrantConsent do
-  use Consent.Commands.Base
+  use Consent.Command
 
   @type t :: %__MODULE__{
           patient_id: binary,

@@ -1,4 +1,4 @@
-defmodule Consent.Commands.Base do
+defmodule Consent.Command do
   defmacro __using__(_opts) do
     quote do
       use Ecto.Schema
@@ -6,7 +6,8 @@ defmodule Consent.Commands.Base do
       import Ecto.Changeset
       alias Consent.Types
 
-      @behaviour Consent.Commands.Base
+      @behaviour Consent.Command
+
 
       @derive Jason.Encoder
 

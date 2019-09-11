@@ -1,5 +1,5 @@
 defmodule Consent.Commands.RevokeConsent do
-  use Consent.Commands.Base
+  use Consent.Command
 
   @type t :: %__MODULE__{
           patient_id: binary,
