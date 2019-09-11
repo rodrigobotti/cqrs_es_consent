@@ -65,7 +65,7 @@ defmodule Consent.Projectors.Patient do
     end
   end)
 
-  def update_permissions_changeset(permissions, patient) do
+  defp update_permissions_changeset(permissions, patient) do
     patient
     |> Ecto.Changeset.change()
     |> Ecto.Changeset.put_change(:permissions, Enum.uniq(permissions))

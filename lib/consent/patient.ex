@@ -82,7 +82,7 @@ defmodule Consent.Patient do
 
   # private
 
-  def has_consent?(%{consent: consent}, {entity, id}, target) do
+  defp has_consent?(%{consent: consent}, {entity, id}, target) do
     consent
     |> Map.get({entity, id}, [])
     |> Enum.member?(target)
