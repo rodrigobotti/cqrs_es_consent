@@ -19,7 +19,7 @@ defmodule Consent.Commands.RevokeConsent do
     %__MODULE__{}
     |> cast(Map.from_struct(command), [:patient_id, :from_id, :from_entity, :target])
     |> validate_required([:patient_id, :from_id, :from_entity, :target])
-    |> validate_inclusion(:by_entity, Types.actors())
+    |> validate_inclusion(:from_entity, Types.actors())
     |> validate_inclusion(:target, Types.targets())
   end
 
