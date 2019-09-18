@@ -1,12 +1,9 @@
 defmodule Consent do
-  alias Consent.Api.Commands
-  alias Consent.Api.Query
+  @moduledoc """
+  Consent keeps the contexts that define your domain
+  and business logic.
 
-  defdelegate ask_consent(patient_id, by_entity, by_id, target), to: Commands
-  defdelegate grant_consent(patient_id, to_entity, to_id, target), to: Commands
-  defdelegate revoke_consent(patient_id, from_entity, from_id, target), to: Commands
-
-  defdelegate consents(patient_id), to: Query
-  defdelegate has_consent?(patient_id, entity_name, entity_id, permission \\ :all), to: Query
-
+  Contexts are also responsible for managing your data, regardless
+  if it comes from the database, an external API or others.
+  """
 end
