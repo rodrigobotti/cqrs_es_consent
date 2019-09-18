@@ -8,7 +8,7 @@ defmodule Consent.CommandRouter do
 
   dispatch(
     [AskConsent, GrantConsent, RevokeConsent],
-    to: Consent.Patient,
+    to: Consent.Aggregates.Patient,
     identity: :patient_id
   )
 end

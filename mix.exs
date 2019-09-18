@@ -18,7 +18,6 @@ defmodule Consent.MixProject do
       mod: {Consent.Application, []},
       extra_applications: [
         :logger,
-        :timex,
         :ecto_sql
       ]
     ]
@@ -27,7 +26,6 @@ defmodule Consent.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:timex, "~> 3.5"},
       {:commanded, "~> 0.19"},
       {:jason, "~> 1.1"},
       {:eventstore, "~> 0.17", runtime: Mix.env() != :test},

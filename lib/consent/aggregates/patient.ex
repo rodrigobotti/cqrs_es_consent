@@ -1,6 +1,4 @@
-defmodule Consent.Patient do
-  use Timex
-
+defmodule Consent.Aggregates.Patient do
   alias __MODULE__
   alias Consent.Events.{ConsentAsked, ConsentGranted, ConsentRevoked}
   alias Consent.Commands.{AskConsent, GrantConsent, RevokeConsent}
@@ -89,7 +87,7 @@ defmodule Consent.Patient do
   end
 
   defp add_timestamp(event) do
-    Map.put(event, :timestamp, Timex.now())
+    Map.put(event, :timestamp, DateTime.utc_now())
   end
 
   defp update_consent(target_list, key, %{} = consent_map) do
