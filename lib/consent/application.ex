@@ -13,7 +13,8 @@ defmodule Consent.Application do
       # Start the endpoint when the application starts
       ConsentWeb.Endpoint,
       # Starts a worker by calling: Consent.Worker.start_link(arg)
-      {Consent.Projectors.Patient, []}
+      {Consent.Projectors.Patient, []},
+      Consent.EventHandlers.NotifyPatient,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
