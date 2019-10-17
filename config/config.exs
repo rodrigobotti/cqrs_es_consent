@@ -29,12 +29,14 @@ config :phoenix, :json_library, Jason
 config :commanded_ecto_projections,
   repo: Consent.Repo
 
-# Commanded default consistency mode
-config :commanded, default_consistency: :strong
-
-# commanded eventstore
+# commanded: eventstore
 config :commanded,
   event_store_adapter: Commanded.EventStore.Adapters.EventStore
+
+# commanded: aggregate snapshotting
+config :commanded, Consent.Aggregates.Patient,
+  snapshot_every: 30,
+  snapshot_version: 1
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
