@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  # EVENTSTORE
+  eventstore:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: consent_eventstore
+      POSTGRES_USER: consent_eventstore
+      POSTGRES_PASSWORD: consent_eventstore
+    ports:
+      - "5433:5432"
+    networks:
+      consent:
+  
+  # QUERY-SIDE DATA SOURCE
+  readstore:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: consent_readstore
+      POSTGRES_USER: consent_readstore
+      POSTGRES_PASSWORD: consent_readstore
+    ports:
+      - "5434:5432"
+    networks:
+      consent:
+
+networks:
+  consent:
+    name: consent

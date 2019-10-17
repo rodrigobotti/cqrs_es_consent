@@ -2,11 +2,11 @@ use Mix.Config
 
 # Configure your database
 config :consent, Consent.Repo,
-  username: "root",
-  password: "admin",
-  database: "cqrs_es_readstore",
+  username: "consent_readstore",
+  password: "consent_readstore",
+  database: "consent_readstore",
   hostname: "localhost",
-  port: 5433,
+  port: 5434,
   pool_size: 10,
   show_sensitive_data_on_connection_error: true
 
@@ -64,9 +64,9 @@ config :eventstore,
 config :eventstore, EventStore.Storage,
   serializer: EventStore.JsonbSerializer,
   types: EventStore.PostgresTypes,
-  username: "root",
-  password: "admin",
-  database: "cqrs_es_eventstore",
+  username: "consent_eventstore",
+  password: "consent_eventstore",
+  database: "consent_eventstore",
   hostname: "localhost",
   port: 5433,
   pool_size: 10
